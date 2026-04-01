@@ -1,19 +1,21 @@
-# AppleScript Automation Skill for OpenClaw
+# AppleScript Automation Skill
 
-🤖 A universal AppleScript automation skill that enables AI agents to control macOS applications through natural language commands.
+🤖 A universal AppleScript automation toolkit that enables AI agents and developers to control macOS applications through natural language commands or direct script execution.
 
-[中文文档](README.zh.md) | [OpenClaw](https://github.com/openclaw/openclaw) | [Report Issues](https://github.com/openclaw/openclaw/issues)
+**Agent-Agnostic** — Works with any AI agent framework (OpenClaw, Claude Code, Cursor, Codex, or standalone)
+
+[中文文档](README.zh.md) · [Report Issues](https://github.com/haoyiyin/applescript-skill/issues)
 
 ---
 
 ## ✨ Features
 
-- **Browser Automation** — Control Chrome, Safari, Firefox (navigate, execute JS, extract data)
-- **File Management** — Finder operations (create, move, copy, delete, organize files)
-- **Communication** — Mail & Messages (iMessage) automation
-- **System Control** — Volume, brightness, notifications, clipboard, power management
-- **Terminal Automation** — Run commands, manage windows/tabs, capture output
-- **Media Control** — Music (iTunes), Calendar, Contacts, Reminders
+- **🌐 Browser Automation** — Control Chrome, Safari, Firefox (navigate, execute JS, extract data)
+- **📁 File Management** — Finder operations (create, move, copy, delete, organize files)
+- **💬 Communication** — Mail & Messages (iMessage) automation
+- **⚙️ System Control** — Volume, brightness, notifications, clipboard, power management
+- **💻 Terminal Automation** — Run commands, manage windows/tabs, capture output
+- **🎵 Media Control** — Music (iTunes), Calendar, Contacts, Reminders
 
 ---
 
@@ -22,19 +24,19 @@
 ### Prerequisites
 
 - macOS 10.15 or later
-- [OpenClaw](https://github.com/openclaw/openclaw) installed
 - Accessibility permissions enabled (System Settings → Privacy & Security → Accessibility)
 
 ### Installation
 
 ```bash
-# Clone or copy this skill to your OpenClaw workspace
-cp -r applescript ~/.openclaw/workspace/skills/
+# Clone the repository
+git clone https://github.com/haoyiyin/applescript-skill.git
+cd applescript-skill
 ```
 
 ### Usage Examples
 
-**Natural Language Commands:**
+**With AI Agents:**
 ```
 "Open Chrome and visit GitHub"
 "Organize all PDFs on my desktop"
@@ -48,15 +50,38 @@ cp -r applescript ~/.openclaw/workspace/skills/
 osascript -e 'tell application "Google Chrome" to set URL of active tab of first window to "https://github.com"'
 ```
 
+**From Python:**
+```python
+import subprocess
+
+def run_applescript(script):
+    result = subprocess.run(['osascript', '-e', script], capture_output=True, text=True)
+    return result.stdout
+
+run_applescript('tell application "Finder" to return name of every item of desktop')
+```
+
+**From Node.js:**
+```javascript
+const { execSync } = require('child_process');
+
+function runAppleScript(script) {
+    return execSync(`osascript -e '${script}'`, { encoding: 'utf8' });
+}
+
+console.log(runAppleScript('tell application "Finder" to return count of every item of desktop'));
+```
+
 ---
 
 ## 📁 Structure
 
 ```
-applescript/
-├── SKILL.md                    # Main skill definition
+applescript-skill/
+├── SKILL.md                    # Agent skill definition (OpenClaw format)
 ├── README.md                   # English documentation (this file)
 ├── README.zh.md                # Chinese documentation
+├── LICENSE                     # MIT License
 ├── references/                 # Ready-to-use script templates
 │   ├── chrome.applescript      # Browser automation
 │   ├── finder.applescript      # File management
@@ -114,6 +139,18 @@ tell application "Messages"
 end tell
 ```
 
+#### 4. System Control
+```applescript
+-- Set volume to 50%
+set volume output volume 50
+
+-- Copy to clipboard
+set the clipboard to "Hello, World!"
+
+-- Display notification
+display notification "Task completed!" with title "Automation"
+```
+
 ---
 
 ## 🔧 Configuration
@@ -127,6 +164,7 @@ end tell
    - `Terminal`
    - `Messages`
    - `Mail`
+   - Your AI agent application (if applicable)
 
 ### Grant Automation Permissions
 
@@ -146,34 +184,48 @@ end tell
   - Delete or move files
   - Send messages or emails
   - Execute terminal commands
-- This skill runs locally — no data is sent to external servers
+  - Access sensitive data
+- Scripts run locally — no data is sent to external servers unless explicitly coded
 
 ---
 
-## 🤝 Contributing
+## 🤝 Integration with AI Agents
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+### OpenClaw
+```bash
+# Copy to OpenClaw workspace
+cp -r applescript-skill ~/.openclaw/workspace/skills/applescript/
+```
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+### Claude Code / Cursor / Codex
+Reference the `references/` scripts directly in your prompts:
+```
+Use the AppleScript skill to open Chrome and navigate to GitHub.
+Reference: ./applescript-skill/references/chrome.applescript
+```
+
+### Custom Agents
+Implement AppleScript execution in your agent's tool layer:
+```python
+def execute_applescript_file(path):
+    result = subprocess.run(['osascript', path], capture_output=True, text=True)
+    return {'output': result.stdout, 'error': result.stderr}
+```
 
 ---
 
 ## 📄 License
 
-This skill is part of the OpenClaw project and follows the same license.
+MIT License — See [LICENSE](LICENSE) file for details.
 
 ---
 
-## 🔗 Links
+## 🔗 Resources
 
-- [OpenClaw Documentation](https://docs.openclaw.ai)
 - [AppleScript Language Guide](https://developer.apple.com/library/archive/documentation/AppleScript/Conceptual/AppleScriptLangGuide/introduction/ASLR_intro.html)
 - [macOS Automation Community](https://macscripter.net/)
+- [AppleScript Essentials](https://developer.apple.com/library/archive/documentation/AppleScript/Conceptual/AppleScriptingBasic/)
 
 ---
 
-**Made with ❤️ for the OpenClaw community**
+**Built with ❤️ for the AI agent community**

@@ -1,19 +1,21 @@
 # AppleScript 自动化技能
 
-🤖 一个通用的 AppleScript 自动化技能，让 AI 代理能够通过自然语言命令控制 macOS 应用程序。
+🤖 一个通用的 AppleScript 自动化工具包，让 AI 代理和开发者能够通过自然语言命令或直接脚本执行来控制 macOS 应用程序。
 
-[English Documentation](README.md) | [OpenClaw](https://github.com/openclaw/openclaw) | [问题反馈](https://github.com/openclaw/openclaw/issues)
+**与 Agent 无关** — 适用于任何 AI 代理框架（OpenClaw、Claude Code、Cursor、Codex 或独立使用）
+
+[English Documentation](README.md) · [问题反馈](https://github.com/haoyiyin/applescript-skill/issues)
 
 ---
 
 ## ✨ 功能特性
 
-- **浏览器自动化** — 控制 Chrome、Safari、Firefox（导航、执行 JS、提取数据）
-- **文件管理** — Finder 操作（创建、移动、复制、删除、整理文件）
-- **通讯自动化** — 邮件和 iMessage 自动化
-- **系统控制** — 音量、亮度、通知、剪贴板、电源管理
-- **Terminal 自动化** — 运行命令、管理窗口/标签页、捕获输出
-- **媒体控制** — Music (iTunes)、日历、联系人、提醒事项
+- **🌐 浏览器自动化** — 控制 Chrome、Safari、Firefox（导航、执行 JS、提取数据）
+- **📁 文件管理** — Finder 操作（创建、移动、复制、删除、整理文件）
+- **💬 通讯自动化** — 邮件和 iMessage 自动化
+- **⚙️ 系统控制** — 音量、亮度、通知、剪贴板、电源管理
+- **💻 Terminal 自动化** — 运行命令、管理窗口/标签页、捕获输出
+- **🎵 媒体控制** — Music (iTunes)、日历、联系人、提醒事项
 
 ---
 
@@ -22,19 +24,19 @@
 ### 前置要求
 
 - macOS 10.15 或更高版本
-- 已安装 [OpenClaw](https://github.com/openclaw/openclaw)
 - 已启用辅助功能权限（系统设置 → 隐私与安全性 → 辅助功能）
 
 ### 安装
 
 ```bash
-# 克隆或复制此技能到你的 OpenClaw 工作区
-cp -r applescript ~/.openclaw/workspace/skills/
+# 克隆仓库
+git clone https://github.com/haoyiyin/applescript-skill.git
+cd applescript-skill
 ```
 
 ### 使用示例
 
-**自然语言命令：**
+**配合 AI 代理：**
 ```
 "打开 Chrome 访问 GitHub"
 "整理桌面上的所有 PDF 文件"
@@ -48,15 +50,38 @@ cp -r applescript ~/.openclaw/workspace/skills/
 osascript -e 'tell application "Google Chrome" to set URL of active tab of first window to "https://github.com"'
 ```
 
+**Python 调用：**
+```python
+import subprocess
+
+def run_applescript(script):
+    result = subprocess.run(['osascript', '-e', script], capture_output=True, text=True)
+    return result.stdout
+
+run_applescript('tell application "Finder" to return name of every item of desktop')
+```
+
+**Node.js 调用：**
+```javascript
+const { execSync } = require('child_process');
+
+function runAppleScript(script) {
+    return execSync(`osascript -e '${script}'`, { encoding: 'utf8' });
+}
+
+console.log(runAppleScript('tell application "Finder" to return count of every item of desktop'));
+```
+
 ---
 
 ## 📁 目录结构
 
 ```
-applescript/
-├── SKILL.md                    # 主技能定义
+applescript-skill/
+├── SKILL.md                    # Agent 技能定义（OpenClaw 格式）
 ├── README.md                   # 英文文档
 ├── README.zh.md                # 中文文档（本文件）
+├── LICENSE                     # MIT 许可证
 ├── references/                 # 即拿即用的脚本模板
 │   ├── chrome.applescript      # 浏览器自动化
 │   ├── finder.applescript      # 文件管理
@@ -114,6 +139,18 @@ tell application "Messages"
 end tell
 ```
 
+#### 4. 系统控制
+```applescript
+-- 设置音量为 50%
+set volume output volume 50
+
+-- 复制到剪贴板
+set the clipboard to "Hello, World!"
+
+-- 显示通知
+display notification "任务完成！" with title "自动化"
+```
+
 ---
 
 ## 🔧 配置
@@ -127,6 +164,7 @@ end tell
    - `Terminal`
    - `Messages`
    - `Mail`
+   - 你的 AI 代理应用（如适用）
 
 ### 授予自动化权限
 
@@ -143,10 +181,36 @@ end tell
 
 - AppleScript 可以控制你的整个 Mac — 只运行来自可信来源的脚本
 - 在执行前审查脚本，特别是那些：
-  - 删除或移动文件的
-  - 发送消息或邮件的
-  - 执行终端命令的
-- 此技能在本地运行 — 不会将数据发送到外部服务器
+   - 删除或移动文件的
+   - 发送消息或邮件的
+   - 执行终端命令的
+   - 访问敏感数据的
+- 脚本在本地运行 — 除非明确编码，否则不会将数据发送到外部服务器
+
+---
+
+## 🤝 与 AI 代理集成
+
+### OpenClaw
+```bash
+# 复制到 OpenClaw 工作区
+cp -r applescript-skill ~/.openclaw/workspace/skills/applescript/
+```
+
+### Claude Code / Cursor / Codex
+在你的 prompt 中直接引用 `references/` 脚本：
+```
+使用 AppleScript 技能打开 Chrome 并导航到 GitHub。
+参考：./applescript-skill/references/chrome.applescript
+```
+
+### 自定义 Agent
+在你的 agent 工具层实现 AppleScript 执行：
+```python
+def execute_applescript_file(path):
+    result = subprocess.run(['osascript', path], capture_output=True, text=True)
+    return {'output': result.stdout, 'error': result.stderr}
+```
 
 ---
 
@@ -172,18 +236,6 @@ end tell
 
 ---
 
-## 🤝 贡献
-
-欢迎贡献！请随时提交 Pull Request。
-
-1. Fork 仓库
-2. 创建你的功能分支 (`git checkout -b feature/amazing-feature`)
-3. 提交你的更改 (`git commit -m 'Add amazing feature'`)
-4. 推送到分支 (`git push origin feature/amazing-feature`)
-5. 提交 Pull Request
-
----
-
 ## ❓ 常见问题
 
 ### Q: 为什么 AppleScript 无法控制 Chrome？
@@ -201,20 +253,23 @@ A: 使用 `Script Editor` 应用（macOS 自带）：
 ### Q: 可以控制 Windows 应用吗？
 A: 不行，AppleScript 仅适用于 macOS。Windows 用户可以考虑使用 PowerShell 或 AutoHotkey。
 
+### Q: 如何在 CI/CD 中使用？
+A: 不推荐在 CI/CD 中使用 AppleScript，因为它需要 GUI 访问权限。考虑使用纯命令行工具替代。
+
 ---
 
 ## 📄 许可证
 
-此技能是 OpenClaw 项目的一部分，遵循相同的许可证。
+MIT 许可证 — 详见 [LICENSE](LICENSE) 文件。
 
 ---
 
-## 🔗 链接
+## 🔗 资源
 
-- [OpenClaw 文档](https://docs.openclaw.ai)
 - [AppleScript 语言指南](https://developer.apple.com/library/archive/documentation/AppleScript/Conceptual/AppleScriptLangGuide/introduction/ASLR_intro.html)
 - [macOS 自动化社区](https://macscripter.net/)
+- [AppleScript 基础教程](https://developer.apple.com/library/archive/documentation/AppleScript/Conceptual/AppleScriptingBasic/)
 
 ---
 
-**用 ❤️ 为 OpenClaw 社区打造**
+**为 AI 代理社区打造 ❤️**
