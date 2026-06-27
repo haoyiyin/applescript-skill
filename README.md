@@ -1,8 +1,8 @@
-# AppleScript Automation Skill
+# AppleScript Automation Agent Skill
 
-🤖 A universal AppleScript automation toolkit that enables AI agents and developers to control macOS applications through natural language commands or direct script execution.
+🤖 An agent skill for macOS automation via AppleScript — enables AI agents to control macOS applications through natural language commands or direct script execution.
 
-**Agent-Agnostic** — Works with any AI agent framework (OpenClaw, Claude Code, Cursor, Codex, or standalone)
+**Agent-compatible** — Supports the [Agent Skills specification](https://agentskills.io/specification). Works with any AI agent framework (Claude Code, OpenClaw, Hermes, Codex, Cursor, or standalone).
 
 [中文文档](README.zh.md) · [Report Issues](https://github.com/haoyiyin/applescript-skill/issues)
 
