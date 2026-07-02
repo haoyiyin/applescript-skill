@@ -28,6 +28,16 @@
 
 ### Installation
 
+#### 🤖 Via AI Agent (Recommended)
+
+Tell any AI coding agent:
+
+> "Install the AppleScript automation skill from `haoyiyin/applescript-skill`"
+
+Your agent will clone, configure, and set up the skill automatically. Works with Pi, Claude Code, Cursor, Codex, Copilot, and any agent supporting the [Agent Skills specification](https://agentskills.io/specification).
+
+#### 🛠️ Manual Installation
+
 ```bash
 # Clone the repository
 git clone https://github.com/haoyiyin/applescript-skill.git
@@ -191,21 +201,20 @@ display notification "Task completed!" with title "Automation"
 
 ## 🤝 Integration with AI Agents
 
-### OpenClaw
-```bash
-# Copy to OpenClaw workspace
-cp -r applescript-skill ~/.openclaw/workspace/skills/applescript/
-```
+This skill follows the [Agent Skills specification](https://agentskills.io/specification). Once installed (see [Installation](#installation) above), any compliant agent can execute AppleScript automation directly.
 
-### Claude Code / Cursor / Codex
-Reference the `references/` scripts directly in your prompts:
+### Usage in Prompts
+
 ```
 Use the AppleScript skill to open Chrome and navigate to GitHub.
-Reference: ./applescript-skill/references/chrome.applescript
+Send iMessage to John saying "Meeting at 3pm".
+Set volume to 50%.
 ```
 
-### Custom Agents
-Implement AppleScript execution in your agent's tool layer:
+### Custom Tool Integration
+
+For custom agent frameworks, implement AppleScript execution as a tool:
+
 ```python
 def execute_applescript_file(path):
     result = subprocess.run(['osascript', path], capture_output=True, text=True)

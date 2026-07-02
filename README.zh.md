@@ -28,6 +28,16 @@
 
 ### 安装
 
+#### 🤖 通过 AI Agent 安装（推荐）
+
+告诉任何 AI 编程助手：
+
+> "安装 haoyiyin/applescript-skill 这个 skill"
+
+你的 agent 会自动完成克隆、配置和安装。支持 Pi、Claude Code、Cursor、Codex、Copilot 等任何遵循 [Agent Skills 规范](https://agentskills.io/specification) 的 agent。
+
+#### 🛠️ 手动安装
+
 ```bash
 # 克隆仓库
 git clone https://github.com/haoyiyin/applescript-skill.git
